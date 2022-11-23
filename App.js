@@ -10,6 +10,7 @@ import SignInScreen from './containers/SignInScreen'
 import SignUpScreen from './containers/SignUpScreen'
 import SettingsScreen from './containers/SettingsScreen'
 import SplashScreen from './containers/SplashScreen'
+import RoomScreen from './containers/RoomScreen'
 
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
@@ -94,7 +95,7 @@ export default function App() {
                         name="Home"
                         options={{
                           title: 'My App',
-                          headerStyle: { backgroundColor: 'red' },
+                          //headerStyle: { backgroundColor: 'blue' },
                           headerTitleStyle: { color: 'white' },
                         }}
                       >
@@ -109,9 +110,46 @@ export default function App() {
                       >
                         {() => <ProfileScreen />}
                       </Stack.Screen>
+
+                      <Stack.Screen
+                        name="Room"
+                        options={{
+                          title: 'Room details',
+                        }}
+                      >
+                        {() => <RoomScreen />}
+                      </Stack.Screen>
                     </Stack.Navigator>
                   )}
                 </Tab.Screen>
+
+                <Tab.Screen
+                  name="TabAroundMe"
+                  options={{
+                    tabBarLabel: 'Around Me',
+                    tabBarIcon: ({ color, size }) => (
+                      <Ionicons
+                        name="location-outline"
+                        size={size}
+                        color={color}
+                      />
+                    ),
+                  }}
+                >
+                  {() => (
+                    <Stack.Navigator>
+                      <Stack.Screen
+                        name="AroundMe"
+                        options={{
+                          title: 'Around me',
+                        }}
+                      >
+                        {() => <SplashScreen />}
+                      </Stack.Screen>
+                    </Stack.Navigator>
+                  )}
+                </Tab.Screen>
+
                 <Tab.Screen
                   name="TabSettings"
                   options={{

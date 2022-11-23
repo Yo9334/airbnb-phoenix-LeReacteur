@@ -18,6 +18,7 @@ export default function SignInScreen({ setToken }) {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState('')
+  const [disabled, setDisabled] = useState(true)
 
   const handleSubmit = async () => {
     if (!email || !password) {
@@ -40,13 +41,13 @@ export default function SignInScreen({ setToken }) {
         const userId = response.data.id
         setToken(userToken, userId)
       } else {
-        setErrorMessage('😕 Email or password is wrong.')
+        setErrorMessage('Email or password is wrong.')
       }
     } catch (error) {
+      console.log('error', error)
       if (error.status === 401) {
-        setErrorMessage('😕 Email or password is wrong.')
+        setErrorMessage('Email or password is wrong.')
       }
-      console.log(error)
     }
   }
 
@@ -85,22 +86,29 @@ export default function SignInScreen({ setToken }) {
 
           {email && password ? (
             <TouchableOpacity
+              disabled={!disabled}
               style={[styles.btnWhite, styles.btnSubmit]}
               onPress={async () => {
+                setDisabled(true)
                 handleSubmit()
               }}
             >
               <Text style={[styles.btnText, styles.greyText]}>Sign in</Text>
+              <ActivityIndicator
+                size="small"
+                color="#0000ff"
+                style={styles.hidden}
+              />
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
+              disabled={disabled}
               style={[styles.btnDisabled, styles.btnSubmit]}
-              onPress={async () => {
-                //handleSubmit()
+              onPress={() => {
+                setDisabled(false)
               }}
             >
               <Text style={[styles.btnText, styles.greyText]}>Sign in</Text>
-              <ActivityIndicator size="small" color="#0000ff" />
             </TouchableOpacity>
           )}
 
@@ -159,7 +167,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  // container: {
+  //   flex: 1,
+  //   justifyContent: 'center',
+  // },
+  // horizontal: {
+  //   flexDirection: 'row',
+  //   justifyContent: 'space-around',
+  //   padding: 10,
+  // },
   btnSubmit: {
+    // backgroundColor: 'pink',
     height: 60,
     width: '60%',
     marginTop: 20,
@@ -178,6 +196,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderWidth: 3,
     borderRadius: 30,
+  },
+  hidden: {
+    display: 'none',
   },
   errorMsg: {
     color: 'red',

@@ -44,10 +44,10 @@ export default function SignUpScreen({ setToken }) {
             setToken(userToken, userId)
           }
         } else {
-          setErrorMessage('⛔️ Passwords are not the same.')
+          setErrorMessage('Passwords are not the same.')
         }
       } else {
-        setErrorMessage('⛔️ Please fill all fields.')
+        setErrorMessage('Please fill all fields.')
       }
     } catch (error) {
       console.log(error.response.data.error)
@@ -124,7 +124,7 @@ export default function SignUpScreen({ setToken }) {
                 handleSubmit()
               }}
             >
-              <Text style={[styles.btnText, styles.greyText]}>Sign in</Text>
+              <Text style={[styles.btnText, styles.greyText]}>Sign up</Text>
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
@@ -133,7 +133,7 @@ export default function SignUpScreen({ setToken }) {
                 //handleSubmit()
               }}
             >
-              <Text style={[styles.btnText, styles.greyText]}>Sign in</Text>
+              <Text style={[styles.btnText, styles.greyText]}>Sign up</Text>
             </TouchableOpacity>
           )}
 
