@@ -2,21 +2,25 @@ import React, { useEffect, useState } from 'react'
 import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
 import { Text, View, StyleSheet } from 'react-native'
 import * as Location from 'expo-location'
+import axios from 'axios'
+import { useNavigation } from '@react-navigation/core'
 
 export default function AroundMeScreen() {
-  const markers = [
-    {
-      id: 1,
-      latitude: 48.8564449,
-      longitude: 2.4002913,
-      title: 'Le Reacteur',
-      description: 'La formation des champion·ne·s !',
-    },
-  ]
+  // const markers = [
+  //   {
+  //     id: 1,
+  //     latitude: 48.8564449,
+  //     longitude: 2.4002913,
+  //     title: 'Le Reacteur',
+  //     description: 'La formation des champion·ne·s !',
+  //   },
+  // ]
 
   const [error, setError] = useState()
   const [isLoading, setIsLoading] = useState(true)
-  const [coords, setCoords] = useState()
+  const [coords, setCoords] = useState(null)
+  const [location, setLocation] = useState([])
+  const navigation = useNavigation()
 
   useEffect(() => {
     const askPermission = async () => {
@@ -33,11 +37,24 @@ export default function AroundMeScreen() {
       } else {
         setError(true)
       }
+      //setIsLoading(false)
+    }
 
-      setIsLoading(false)
+    const fetchLocation = async () => {
+      try {
+        const response = await axios.get(
+          'https://express-airbnb-api.herokuapp.com/rooms/around',
+        )
+        // console.log(response.data)
+        setLocation(response.data)
+        setIsLoading(false)
+      } catch (error) {
+        console.log(error.message)
+      }
     }
 
     askPermission()
+    fetchLocation()
   }, [])
 
   return (
@@ -48,10 +65,12 @@ export default function AroundMeScreen() {
         <Text>Permission refusée</Text>
       ) : (
         <>
-          <View>
-            <Text>Latitude de l'utilisateur : {coords.latitude}</Text>
-            <Text>Longitude de l'utilisateur : {coords.longitude}</Text>
-          </View>
+          {coords && (
+            <View>
+              <Text>Latitude de l'utilisateur : {coords.latitude}</Text>
+              <Text>Longitude de l'utilisateur : {coords.longitude}</Text>
+            </View>
+          )}
 
           <MapView
             provider={PROVIDER_GOOGLE}
@@ -65,16 +84,19 @@ export default function AroundMeScreen() {
             }}
             showsUserLocation={true}
           >
-            {markers.map((marker) => {
+            {location.map((marker) => {
               return (
                 <Marker
-                  key={marker.id}
+                  key={marker.user}
                   coordinate={{
-                    latitude: marker.latitude,
-                    longitude: marker.longitude,
+                    latitude: marker.location[1],
+                    longitude: marker.location[0],
                   }}
                   title={marker.title}
                   description={marker.description}
+                  onCalloutPress={(e) => {
+                    navigation.navigate('Room', { id: marker._id })
+                  }}
                 />
               )
             })}

@@ -1,4 +1,4 @@
-import { useNavigation } from '@react-navigation/core'
+// import { useNavigation } from '@react-navigation/core'
 import { useEffect, useState } from 'react'
 import {
   Text,

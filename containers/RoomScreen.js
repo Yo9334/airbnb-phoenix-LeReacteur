@@ -40,7 +40,7 @@ export default function RoomScreen({ route }) {
       }
     }
     fetchData()
-  }, [])
+  }, [id])
 
   const ratingStar = (val, id) => {
     const tab = []
@@ -65,38 +65,30 @@ export default function RoomScreen({ route }) {
     <ScrollView>
       <View style={styles.main}>
         <View>
-          <Swiper
-            style={styles.wrapper}
-            dotColor="white"
-            activeDotColor="red"
-            autoplay
-          >
-            {data.photos.map((slide) => {
-              return (
-                <View style={styles.slide} key={slide.picture_id}>
-                  {/* <Image
-                  source={{ uri: slide.url }}
-                  style={{ height: '100%', width: '100%' }}
-                /> */}
-
+          <View style={{ position: 'relative' }}>
+            <Swiper
+              style={styles.wrapper}
+              dotColor="white"
+              activeDotColor="red"
+              autoplay
+            >
+              {data.photos.map((slide) => {
+                return (
                   <ImageBackground
                     source={{ uri: slide.url }}
                     style={{
                       width: '100%',
                       height: 200,
-                      flexDirection: 'row',
-                      alignItems: 'flex-end',
-                      marginBottom: 10,
                     }}
-                  >
-                    <View style={styles.offerPriceWrapper}>
-                      <Text style={styles.offerPrice}>{data.price} €</Text>
-                    </View>
-                  </ImageBackground>
-                </View>
-              )
-            })}
-          </Swiper>
+                  />
+                )
+              })}
+            </Swiper>
+
+            <View style={styles.offerPriceWrapper}>
+              <Text style={styles.offerPrice}>{data.price} €</Text>
+            </View>
+          </View>
 
           <View style={styles.cardWrapper}>
             <View style={styles.ratingWrapper}>
@@ -118,11 +110,9 @@ export default function RoomScreen({ route }) {
             </View>
           </View>
 
-          <View>
-            <Text ellipsizeMode="tail" numberOfLines={3}>
-              {data.description}
-            </Text>
-          </View>
+          <Text ellipsizeMode="tail" numberOfLines={3}>
+            {data.description}
+          </Text>
         </View>
 
         <MapView
@@ -130,7 +120,7 @@ export default function RoomScreen({ route }) {
           // La MapView doit obligatoirement avoir des dimensions
           style={{
             flex: 1,
-            minHeight: 280,
+            minHeight: 300,
             marginBottom: 10,
             marginTop: 10,
           }}
@@ -164,9 +154,9 @@ const styles = StyleSheet.create({
   wrapper: {
     height: 200,
   },
-  slide: {
-    height: 200,
-  },
+  // slide: {
+  //   height: 200,
+  // },
   rating: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
@@ -196,15 +186,16 @@ const styles = StyleSheet.create({
   },
 
   offerPriceWrapper: {
+    position: 'absolute',
+    bottom: 20,
     backgroundColor: 'black',
     width: 80,
     minWidth: 80,
     padding: 10,
     alignItems: 'center',
-    bottom: 10,
   },
+
   offerPrice: {
     color: 'white',
   },
-  slide: {},
 })
