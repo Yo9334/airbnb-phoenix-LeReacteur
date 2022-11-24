@@ -28,6 +28,8 @@ export default function SignInScreen({ setToken }) {
       setErrorMessage('')
     }
 
+    setDisabled(true)
+
     try {
       const response = await axios.post(
         'https://express-airbnb-api.herokuapp.com/user/log_in',
@@ -105,7 +107,7 @@ export default function SignInScreen({ setToken }) {
               disabled={disabled}
               style={[styles.btnDisabled, styles.btnSubmit]}
               onPress={() => {
-                setDisabled(false)
+                handleSubmit()
               }}
             >
               <Text style={[styles.btnText, styles.greyText]}>Sign in</Text>

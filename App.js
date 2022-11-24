@@ -9,8 +9,9 @@ import ProfileScreen from './containers/ProfileScreen'
 import SignInScreen from './containers/SignInScreen'
 import SignUpScreen from './containers/SignUpScreen'
 import SettingsScreen from './containers/SettingsScreen'
-import SplashScreen from './containers/SplashScreen'
+// import SplashScreen from './containers/SplashScreen'
 import RoomScreen from './containers/RoomScreen'
+import AroundMeScreen from './containers/AroundMeScreen'
 
 const Tab = createBottomTabNavigator()
 const Stack = createNativeStackNavigator()
@@ -98,8 +99,9 @@ export default function App() {
                           //headerStyle: { backgroundColor: 'blue' },
                           headerTitleStyle: { color: 'white' },
                         }}
+                        component={HomeScreen}
                       >
-                        {() => <HomeScreen />}
+                        {/* {() => <HomeScreen />} */}
                       </Stack.Screen>
 
                       <Stack.Screen
@@ -114,10 +116,11 @@ export default function App() {
                       <Stack.Screen
                         name="Room"
                         options={{
-                          title: 'Room details',
+                          title: 'Room',
                         }}
+                        component={RoomScreen}
                       >
-                        {() => <RoomScreen />}
+                        {/* {() => <RoomScreen />} */}
                       </Stack.Screen>
                     </Stack.Navigator>
                   )}
@@ -144,7 +147,7 @@ export default function App() {
                           title: 'Around me',
                         }}
                       >
-                        {() => <SplashScreen />}
+                        {() => <AroundMeScreen />}
                       </Stack.Screen>
                     </Stack.Navigator>
                   )}

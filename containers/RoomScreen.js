@@ -1,22 +1,24 @@
-import { useRoute } from '@react-navigation/native'
+// import { useRoute } from '@react-navigation/native'
 import { useEffect, useState } from 'react'
 import {
   ScrollView,
   Text,
   View,
-  ImageBackground,
   StyleSheet,
   ActivityIndicator,
   Image,
+  ImageBackground,
 } from 'react-native'
 
-import { StatusBar } from 'expo-status-bar'
 import { Ionicons } from '@expo/vector-icons'
+import Swiper from 'react-native-swiper'
 import axios from 'axios'
+import MapView, { PROVIDER_GOOGLE, Marker } from 'react-native-maps'
 
-export default function RoomScreen() {
-  const { params } = useRoute()
-  const id = params.id
+export default function RoomScreen({ route }) {
+  // const { params } = useRoute()
+  // const id = params.id
+  const id = route.params.id
 
   // States
   const [loading, setLoading] = useState(true)
@@ -61,51 +63,118 @@ export default function RoomScreen() {
     </View>
   ) : (
     <ScrollView>
-      <View>
-        <ImageBackground
-          source={{ uri: data.photos[0].url }}
-          style={{
-            width: '100%',
-            height: 200,
-            flexDirection: 'row',
-            alignItems: 'flex-end',
-          }}
-        >
-          <View style={styles.offerPriceWrapper}>
-            <Text style={styles.offerPrice}>{data.price} €</Text>
-          </View>
-        </ImageBackground>
-        <View style={styles.cardWrapper}>
-          <View style={styles.ratingWrapper}>
-            <Text style={styles.title}>{data.title}</Text>
-            <View style={styles.rating}>
-              <Text>{ratingStar(data.ratingValue, data._id)}</Text>
-              <Text>{data.reviews} reviews</Text>
+      <View style={styles.main}>
+        <View>
+          <Swiper
+            style={styles.wrapper}
+            dotColor="white"
+            activeDotColor="red"
+            autoplay
+          >
+            {data.photos.map((slide) => {
+              return (
+                <View style={styles.slide} key={slide.picture_id}>
+                  {/* <Image
+                  source={{ uri: slide.url }}
+                  style={{ height: '100%', width: '100%' }}
+                /> */}
+
+                  <ImageBackground
+                    source={{ uri: slide.url }}
+                    style={{
+                      width: '100%',
+                      height: 200,
+                      flexDirection: 'row',
+                      alignItems: 'flex-end',
+                      marginBottom: 10,
+                    }}
+                  >
+                    <View style={styles.offerPriceWrapper}>
+                      <Text style={styles.offerPrice}>{data.price} €</Text>
+                    </View>
+                  </ImageBackground>
+                </View>
+              )
+            })}
+          </Swiper>
+
+          <View style={styles.cardWrapper}>
+            <View style={styles.ratingWrapper}>
+              <Text style={styles.title} ellipsizeMode="tail" numberOfLines={1}>
+                {data.title}
+              </Text>
+              <View style={styles.rating}>
+                <Text>{ratingStar(data.ratingValue, data._id)}</Text>
+                <Text>{data.reviews} reviews</Text>
+              </View>
+            </View>
+
+            <View style={styles.avatarImgWrapper}>
+              <Image
+                source={{ uri: data.user.account.photo.url }}
+                style={styles.avatarImg}
+                resizeMode="contain"
+              />
             </View>
           </View>
 
-          <View style={styles.avatarImgWrapper}>
-            <Image
-              source={{ uri: data.user.account.photo.url }}
-              style={styles.avatarImg}
-              resizeMode="contain"
-            />
+          <View>
+            <Text ellipsizeMode="tail" numberOfLines={3}>
+              {data.description}
+            </Text>
           </View>
         </View>
+
+        <MapView
+          provider={PROVIDER_GOOGLE}
+          // La MapView doit obligatoirement avoir des dimensions
+          style={{
+            flex: 1,
+            minHeight: 280,
+            marginBottom: 10,
+            marginTop: 10,
+          }}
+          initialRegion={{
+            latitude: 48.856614,
+            longitude: 2.3522219,
+            latitudeDelta: 0.2,
+            longitudeDelta: 0.2,
+          }}
+          showsUserLocation={true}
+        >
+          <Marker
+            key={data._id}
+            coordinate={{
+              latitude: data.location[1],
+              longitude: data.location[0],
+            }}
+            title={data.title}
+            description={data.description}
+          />
+        </MapView>
       </View>
     </ScrollView>
   )
 }
 
 const styles = StyleSheet.create({
+  main: {
+    margin: 10,
+  },
+  wrapper: {
+    height: 200,
+  },
+  slide: {
+    height: 200,
+  },
   rating: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
     alignItems: 'center',
   },
   title: {
-    fontSize: 14,
-    fontWeight: '700',
+    fontSize: 16,
+    fontWeight: '400',
   },
   cardWrapper: {
     flexDirection: 'row',
@@ -113,8 +182,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingBottom: 10,
   },
+  ratingWrapper: {
+    width: '75%',
+  },
   avatarImgWrapper: {
-    width: '25%',
+    flex: 1,
     alignItems: 'flex-end',
   },
   avatarImg: {
@@ -134,4 +206,5 @@ const styles = StyleSheet.create({
   offerPrice: {
     color: 'white',
   },
+  slide: {},
 })
